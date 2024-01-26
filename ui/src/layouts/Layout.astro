@@ -1,6 +1,7 @@
 ---
+import NavBar from "../components/navBar.svelte";
 interface Props {
-	title: string;
+  title: string;
 }
 
 const { title } = Astro.props;
@@ -8,44 +9,144 @@ const { title } = Astro.props;
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/LD_logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <NavBar client:load />
+    <slot />
+  </body>
 </html>
 <style is:global>
-	:root {
-		--accent: 136, 58, 234;
-		--accent-light: 224, 204, 250;
-		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
-		);
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;
-		background-size: 224px;
-	}
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
-	}
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+  }
+  html {
+    font-family: system-ui, sans-serif;
+    scroll-padding-top: var(--scroll-padding, 60px);
+    font-size: var(--base-font-med);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  :root {
+    --primary: #7062f0;
+    --secondary: #cd62f0;
+    --accent: #f06295;
+    --success: #1ae4a1;
+    --failure: #cf004c;
+    --gradient: linear-gradient(var(--primary), var(--secondary));
+    --dark100: #252054;
+    --dark80: #514d77;
+    --dark60: #7c7999;
+    --dark40: #a8a6bb;
+    --dark20: #d3d2dd;
+    --dark10: #e9e9ee;
+    --base-font-large: 21px;
+    --base-font-med: 16px;
+    --font-color: var(--dark100);
+    --nav-height: 60px;
+  }
+  html {
+    font-size: var(--base-font-med);
+  }
+
+  h6 {
+    font-size: 1.2rem;
+    padding: 0;
+    margin: 0;
+    color: var(--font-color);
+  }
+  h5 {
+    font-size: 1.56rem;
+    padding: 0;
+    margin: 0;
+    color: var(--font-color);
+  }
+  h4 {
+    font-size: 1.95rem;
+    padding: 0;
+    margin: 0;
+    color: var(--font-color);
+  }
+  h3 {
+    font-size: 2.44rem;
+    padding: 0;
+    margin: 0;
+    color: var(--font-color);
+  }
+  h2 {
+    font-size: 3rem;
+    padding: 0;
+    margin: 0;
+    color: var(--font-color);
+  }
+  h1 {
+    font-size: 3.81rem;
+    padding: 0;
+    margin: 0;
+    color: var(--font-color);
+  }
+  @media screen and (min-width: 800px) {
+    html {
+      font-size: var(--base-font-med);
+    }
+    h6 {
+      font-size: 1.414rem;
+    }
+    h5 {
+      font-size: 1.99rem;
+    }
+    h4 {
+      font-size: 2.8rem;
+    }
+    h3 {
+      font-size: 3.9rem;
+    }
+    h2 {
+      font-size: 5.6rem;
+    }
+    h1 {
+      font-size: 7.9rem;
+    }
+  }
+  @media screen and (min-width: 1000px) {
+    html {
+      font-size: var(--base-font-large);
+    }
+    h6 {
+      font-size: 1.414rem;
+    }
+    h5 {
+      font-size: 1.99rem;
+    }
+    h4 {
+      font-size: 2.8rem;
+    }
+    h3 {
+      font-size: 3.9rem;
+    }
+    h2 {
+      font-size: 5.6rem;
+    }
+    h1 {
+      font-size: 7.9rem;
+    }
+  }
 </style>
