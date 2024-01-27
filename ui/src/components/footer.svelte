@@ -7,7 +7,7 @@
     <span>Jared Letts</span> All rights reserved {new Date().getFullYear()}
   </div>
   <div class="icon-container">
-    <a href="https://github.com/LettsDev">
+    <a href="https://github.com/LettsDev/dev_porfolio">
       <img src={githubMarkIcon.src} alt="github logo" />
     </a>
   </div>
