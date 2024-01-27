@@ -102,17 +102,17 @@
   <ul>
     <li>
       <a href="#project">
-        <h6>Projects</h6>
+        <span>Projects</span>
       </a>
     </li>
     <li>
       <a href="#about">
-        <h6>About Me</h6>
+        <span>About Me</span>
       </a>
     </li>
     <li>
       <a href="#contact">
-        <h6>Contact</h6>
+        <span>Contact</span>
       </a>
     </li>
   </ul>
@@ -150,8 +150,9 @@
   }
   a {
     text-decoration: none;
-    &:global(.select) h6 {
-      color: var(--accent);
+    span {
+      font-size: 1.5rem;
+      font-weight: bold;
     }
   }
   .scrolled {
