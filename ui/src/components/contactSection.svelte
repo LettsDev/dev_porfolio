@@ -17,7 +17,7 @@
     });
     const stringData = JSON.stringify(data);
     try {
-      const response = await window.fetch("http://localhost:3000/contact", {
+      const response = await window.fetch("/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: stringData,
@@ -43,11 +43,11 @@
   <form on:submit|preventDefault={handleSubmit}>
     <div class="small-input-container">
       <div class="input">
-        <label for="name">Name</label>
+        <label for="name-input">Name</label>
         <input type="text" name="name" id="name-input" required />
       </div>
       <div class="input">
-        <label for="email">Email</label>
+        <label for="email-input">Email</label>
         <input type="email" name="email" id="email-input" required />
       </div>
     </div>

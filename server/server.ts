@@ -1,9 +1,13 @@
+require("dotenv").config();
 import Fastify, { FastifyInstance, errorCodes } from "fastify";
 import path from "path";
 import fastifyStatic from "@fastify/static";
 import cors from "@fastify/cors";
+import fastifyHelmet from "@fastify/helmet";
 import { Notion } from "./notion";
-
+import Mailer from "./mailer";
+import ejs from "ejs";
+const mailer = new Mailer(process.env.RESEND_API as string);
 const loggerConfig = {
   development: {
     transport: {
@@ -26,11 +30,13 @@ const environment = process.env.ENVIRONMENT as
 const server: FastifyInstance = Fastify({
   logger: loggerConfig[environment] ?? true,
 });
-server.register(cors, {
-  origin: "http://localhost:4321",
-});
+if (environment === "development" || environment === "test") {
+  server.register(cors, {
+    origin: "http://localhost:4321",
+  });
+}
 server.register(fastifyStatic, { root: path.join(__dirname, "dist") });
-
+server.register(fastifyHelmet);
 server.addContentTypeParser(
   "application/json",
   { parseAs: "string" },
@@ -49,7 +55,12 @@ server.addContentTypeParser(
     }
   }
 );
-
+server.addHook("onSend", async function (request, reply) {
+  reply.headers({
+    "Content-Security-Policy":
+      "default-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; script-src 'self' 'unsafe-inline'; font-src 'self' fonts.gstatic.com; img-src 'self' www.w3.org;",
+  });
+});
 server.post("/contact", async (req, reply) => {
   try {
     const data = req.body as {
@@ -61,7 +72,6 @@ server.post("/contact", async (req, reply) => {
     const userId = process.env.NOTION_USER_ID as string;
     const notion = new Notion(process.env.NOTION_TOKEN as string);
     const props = await notion.getDbProps(testDB);
-    console.log("props: ", props);
     const response = await notion.addNewPageToDb(
       data.name,
       data.email,
@@ -69,14 +79,28 @@ server.post("/contact", async (req, reply) => {
       testDB,
       userId
     );
-    console.log("new page response: ", response);
     if (response)
-      reply
-        .code(200)
-        .header("Content-Type", "application/json; charset=utf-8")
-        .send();
+      mailer.send(
+        data.email,
+        "Let's work together",
+        await ejs.renderFile("./email/newClientTemplate.ejs", {
+          clientName: data.name,
+          clientDetails: data.description,
+          clientEmail: data.email,
+        })
+      );
+    reply
+      .code(200)
+      .header("Content-Type", "application/json; charset=utf-8")
+      .send();
     return;
   } catch (err) {
+    //attempt email notification
+    mailer.send(
+      "jared@lettsdev.ca",
+      "LettsDev new client error",
+      `<p>error: <strong>${err}</strong></p>`
+    );
     reply
       .status(400)
       .header("Content-Type", "application/json; charset=utf-8")
@@ -87,14 +111,15 @@ server.post("/contact", async (req, reply) => {
 
 const start = async () => {
   try {
+    if (process.env.ENVIRONMENT === "development") {
+      console.log("server running in development mode");
+    }
     const envPort = process.env.PORT;
     const envHost = process.env.HOSTNAME;
     await server.listen({
       port: !envPort ? 3000 : +envPort,
       host: !envHost ? "localhost" : envHost,
     });
-
-    const address = server.server.address();
   } catch (err) {
     server.log.error(err);
     process.exit(1);

@@ -4,6 +4,7 @@ import {
   isNotionClientError,
   ClientErrorCode,
 } from "@notionhq/client";
+import "dotenv/config";
 import { CreatePageResponse } from "@notionhq/client/build/src/api-endpoints";
 
 export async function initNotion(): Promise<Client> {
