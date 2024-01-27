@@ -1,3 +1,4 @@
+require("dotenv").config();
 import {
   Client,
   APIErrorCode,
@@ -7,19 +8,6 @@ import {
 import "dotenv/config";
 import { CreatePageResponse } from "@notionhq/client/build/src/api-endpoints";
 
-export async function initNotion(): Promise<Client> {
-  return await NotionWithError(() => {
-    const notion = new Client({ auth: process.env.NOTION_TOKEN as string });
-    return notion;
-  });
-}
-
-export async function getDatabaseProps(notion: Client, db: string) {
-  return await NotionWithError(() => {
-    const dbObj = notion.databases.retrieve({ database_id: db });
-    return dbObj;
-  });
-}
 async function NotionWithError(callback: Function) {
   try {
     return callback();
@@ -101,3 +89,10 @@ export class Notion {
     });
   };
 }
+
+const notionToken = process.env.NOTION_TOKEN;
+!notionToken ? console.error("missing Notion API token") : null;
+
+const notion = new Notion(notionToken as string);
+
+export default notion;

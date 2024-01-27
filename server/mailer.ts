@@ -1,5 +1,6 @@
 import { Resend } from "resend";
-export default class Mailer {
+require("dotenv").config();
+class Mailer {
   api_key: string;
   #resend;
   constructor(api_key: string) {
@@ -20,3 +21,10 @@ export default class Mailer {
     console.log(data);
   };
 }
+
+const mailerAPI = process.env.RESEND_API;
+if (!mailerAPI) {
+  console.error("missing mailer API key!!");
+}
+const mailer = new Mailer(mailerAPI as string);
+export default mailer;

@@ -26,11 +26,6 @@
       loop(word, (index += 1));
     }, 70);
   }
-
-  //loop through the choices
-  //for each choice set an interval that will loop through the letters
-  //wait
-  //repeat
 </script>
 
 <section>

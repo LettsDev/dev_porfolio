@@ -1,66 +1,15 @@
 require("dotenv").config();
-import Fastify, { FastifyInstance, errorCodes } from "fastify";
-import path from "path";
-import fastifyStatic from "@fastify/static";
-import cors from "@fastify/cors";
-import fastifyHelmet from "@fastify/helmet";
-import { Notion } from "./notion";
-import Mailer from "./mailer";
+import notion from "./notion";
+import mailer from "./mailer";
 import ejs from "ejs";
-const mailer = new Mailer(process.env.RESEND_API as string);
-const loggerConfig = {
-  development: {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        translateTime: "HH:MM:ss Z",
-        ignore: "pid,hostname",
-      },
-    },
-  },
-  production: true,
-  test: false,
-};
+import server from "./utils/createServer";
 
-const environment = process.env.ENVIRONMENT as
-  | "development"
-  | "production"
-  | "test";
+// notion config env variables
+const clientDB = process.env.TEST_DB;
+const userId = process.env.NOTION_USER_ID;
+!clientDB ? console.error("missing Notion DB variable") : null;
+!userId ? console.error("missing Notion user variable") : null;
 
-const server: FastifyInstance = Fastify({
-  logger: loggerConfig[environment] ?? true,
-});
-if (environment === "development" || environment === "test") {
-  server.register(cors, {
-    origin: "http://localhost:4321",
-  });
-}
-server.register(fastifyStatic, { root: path.join(__dirname, "dist") });
-server.register(fastifyHelmet);
-server.addContentTypeParser(
-  "application/json",
-  { parseAs: "string" },
-  (req, body, done) => {
-    try {
-      if (typeof body === "string") {
-        const json = JSON.parse(body);
-        done(null, json);
-        return;
-      }
-      console.error("not parsed correctly: ");
-    } catch (err) {
-      if (err instanceof errorCodes.FST_ERR_BAD_STATUS_CODE) {
-        console.error(err);
-      }
-    }
-  }
-);
-server.addHook("onSend", async function (request, reply) {
-  reply.headers({
-    "Content-Security-Policy":
-      "default-src 'self'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; script-src 'self' 'unsafe-inline'; font-src 'self' fonts.gstatic.com; img-src 'self' www.w3.org;",
-  });
-});
 server.post("/contact", async (req, reply) => {
   try {
     const data = req.body as {
@@ -68,16 +17,13 @@ server.post("/contact", async (req, reply) => {
       email: string;
       description: string;
     };
-    const testDB = process.env.TEST_DB as string;
-    const userId = process.env.NOTION_USER_ID as string;
-    const notion = new Notion(process.env.NOTION_TOKEN as string);
-    const props = await notion.getDbProps(testDB);
+
     const response = await notion.addNewPageToDb(
       data.name,
       data.email,
       data.description,
-      testDB,
-      userId
+      clientDB as string,
+      userId as string
     );
     if (response)
       mailer.send(
