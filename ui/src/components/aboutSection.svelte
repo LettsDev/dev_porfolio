@@ -1,5 +1,5 @@
 <script lang="ts">
-  import portrait from "../images/portrait/portraitAi.webp";
+  import portrait from "../images/portrait/pic2.webp";
 </script>
 
 <section id="about" data-section>

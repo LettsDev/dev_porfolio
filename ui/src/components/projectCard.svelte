@@ -38,9 +38,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    .skinny-img {
-      display: none;
-    }
     .img {
       width: 100%;
       border-top-right-radius: 16px;
