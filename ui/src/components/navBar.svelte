@@ -146,6 +146,10 @@
     }
     &:hover {
       transform: scale(110%);
+      span {
+        color: var(--accent);
+        -webkit-text-stroke: 1px var(--dark100);
+      }
     }
   }
   a {
@@ -153,6 +157,8 @@
     span {
       font-size: 1.5rem;
       font-weight: bold;
+      color: var(--dark100);
+      transition: color 0.5s;
     }
   }
   .scrolled {
