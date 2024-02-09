@@ -1,5 +1,5 @@
 <script lang="ts">
-  import portrait from "../images/portrait/pic2.webp";
+  import portrait from "../images/portrait/pic2-resize.webp";
 </script>
 
 <section id="about" data-section>
@@ -37,10 +37,10 @@
     img {
       border-radius: 16px;
       border: 2px solid black;
-      width: 100%;
+      width: clamp(300px, 100%, 600px);
     }
     .portrait-container {
-      width: clamp(300px, 100%, 700px);
+      width: clamp(300px, 100%, 600px);
       align-self: center;
     }
   }

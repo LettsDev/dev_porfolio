@@ -1,6 +1,6 @@
 <script lang="ts">
   import ProjectCard from "./projectCard.svelte";
-  import resourceManagerWide2 from "../images/resource_project/resource-manager-wide2.webp";
+  import resourceManagerWide2 from "../images/resource_project/resource-manager-wide2-lrg.webp";
   import waldo from "../images/waldo/waldo.webp";
 </script>
 

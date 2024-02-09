@@ -34,12 +34,12 @@
     background: var(--dark10);
     border-radius: 16px;
     box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
-    width: clamp(300px, 100%, 850px);
+    width: clamp(300px, 100%, 600px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     .img {
-      width: 100%;
+      width: clamp(300px, 100%, 600px);
       border-top-right-radius: 16px;
       border-top-left-radius: 16px;
     }
